@@ -1,0 +1,47 @@
+#area
+{
+    margin: auto;
+    border: 1px solid;
+}
+
+#area > div
+{
+	float: left;
+}
+
+#area > div.head
+{
+	background: red !important;
+}
+
+#area > div.tail
+{
+	background: gray !important;
+}
+
+#area > div.food
+{
+	background: #48b948;
+}
+
+.gameOverHead
+{
+    animation: blinkingHead 1s infinite;
+}
+
+@keyframes blinkingHead
+{
+    0%{background: red;}
+    50%{background: transparent;}
+}
+
+.gameOverTail
+{
+    animation: blinkingTail 1s infinite;
+}
+
+@keyframes blinkingTail
+{
+    0%{background: gray;}
+    50%{background: transparent;}
+}
