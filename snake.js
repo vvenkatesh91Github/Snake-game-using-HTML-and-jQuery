@@ -3,7 +3,7 @@ var snake = (function()
 	var areaSize = 200;
 	var cellSize = 5;
 	var sideLength = areaSize/cellSize;
-	var tailLength = 4;
+	var tailLength = 10;
 	var levelDifficulty =
 	{
 		easy : 150,
@@ -19,6 +19,7 @@ var snake = (function()
 	}
 	var tailDirection, isStartedMoving, currentDirection;
 	var isKeyFired = false;
+	var isGamePaused = false;
 
 	function drawGameArea()
 	{
@@ -138,10 +139,24 @@ var snake = (function()
 	{
 		$(document).keyup(function(event)
 		{
-			if(directions[event.which] != undefined && directions[event.which] != tailDirection && !isKeyFired)
+			if(directions[event.which] != undefined && directions[event.which] != tailDirection && !isKeyFired && !isGamePaused)
 			{
 				isKeyFired = true;
 				moveDirection(directions[event.which]);
+			}
+			else if(event.which == 32)
+			{
+				if(isGamePaused)
+				{
+					isGamePaused = false;
+					moveDirection(currentDirection);
+				}
+				else
+				{
+					clearInterval(isStartedMoving);
+					isStartedMoving = undefined;
+					isGamePaused = true;
+				}
 			}
 		});
 	}
@@ -278,7 +293,7 @@ var snake = (function()
 		clearInterval(isStartedMoving);
 		$("#area > div.head").addClass("gameOverHead");
 		$("#area > div.tail").addClass("gameOverTail");
-		console.log("Game over");
+		$(document).unbind("keyup");
 	}
 	
 	function init()
