@@ -3,14 +3,14 @@ var snake = (function()
 	var areaSize = 200;
 	var cellSize = 5;
 	var sideLength = areaSize/cellSize;
-	var tailLength = 10;
+	var tailLength = 4;
 	var levelDifficulty =
 	{
 		easy : 150,
 		medium : 250,
 		hard : 150
 	}
-	var directions = 
+	var directions =
 	{
 		37 : "left",
 		38 : "top",
@@ -24,20 +24,20 @@ var snake = (function()
 	function drawGameArea()
 	{
 		$("#area").css({width : areaSize, height: areaSize});
-		
+
 		for(var i = 1; i <= sideLength; i++)
 		{
 			for(var j = 1; j <= sideLength; j++)
 				$("#area").append("<div i='r"+i+"' j='c"+j+"' style='width: "+cellSize+"px; height: "+cellSize+"px;'></div>");
 		}
 	}
-	
+
 	function drawSnake()
 	{
 		var headPosition = descideAndDrawHead();
 		drawTail(headPosition);
 	}
-	
+
 	function descideAndDrawHead()
 	{
 		var iIndex = sideLength;
@@ -45,19 +45,19 @@ var snake = (function()
 		var random_iIndex = Math.floor(Math.random() * iIndex + 1);
 		var random_jIndex = Math.floor(Math.random() * jIndex + 1);
 		$("#area > div[i=r"+ random_iIndex +"][j=c"+ random_jIndex +"]").addClass("head");
-		var headPosition = 
+		var headPosition =
 		{
 			i : random_iIndex,
 			j : random_jIndex
 		}
 		return headPosition;
 	}
-	
+
 	function drawTail(headPosition)
 	{
 		var isPositionsFound = false;
 		var directionsWent = [];
-		
+
 		while(!isPositionsFound)
 		{
 			var direction = descideTailDirection();
@@ -129,38 +129,50 @@ var snake = (function()
 			}
 		}
 	}
-	
+
 	function descideTailDirection()
 	{
 		return Math.floor(Math.random() * (40 - 37 + 1) + 37);
 	}
-	
+
 	function assignLocomotion(levelDifficulty)
 	{
 		$(document).keyup(function(event)
 		{
-			if(directions[event.which] != undefined && directions[event.which] != tailDirection && !isKeyFired && !isGamePaused)
-			{
-				isKeyFired = true;
-				moveDirection(directions[event.which]);
-			}
-			else if(event.which == 32)
-			{
-				if(isGamePaused)
-				{
-					isGamePaused = false;
-					moveDirection(currentDirection);
-				}
-				else
-				{
-					clearInterval(isStartedMoving);
-					isStartedMoving = undefined;
-					isGamePaused = true;
-				}
-			}
+			controlEvent(event);
+		});
+
+		$("#controls > div > div").on("click", function(event)
+		{
+            		var eve = {which : 0};
+            		eve.which = event.target.id;
+			controlEvent(eve);
 		});
 	}
-	
+
+	function controlEvent(event)
+	{
+		if(directions[event.which] != undefined && directions[event.which] != tailDirection && !isKeyFired && !isGamePaused)
+		{
+			isKeyFired = true;
+			moveDirection(directions[event.which]);
+		}
+		else if(event.which == 32)
+		{
+			if(isGamePaused)
+			{
+				isGamePaused = false;
+				moveDirection(currentDirection);
+			}
+			else
+			{
+				clearInterval(isStartedMoving);
+				isStartedMoving = undefined;
+				isGamePaused = true;
+			}
+		}
+	}
+
 	function moveDirection(direction)
 	{
 		currentDirection = direction;
@@ -263,31 +275,31 @@ var snake = (function()
 			}, levelDifficulty.easy);
 		}
 	}
-	
+
 	function moveTail(prevHeadRow, prevHeadColumn)
 	{
 		var tailTip = $("#area > div.tailTip");
 		var prev_iIndex = parseInt($(tailTip).attr("prev").split(",")[0]);
 		var prev_jIndex = parseInt($(tailTip).attr("prev").split(",")[1]);
 		$(tailTip).removeAttr("class prev");
-		
+
 		$("#area > div[i=r"+ prev_iIndex +"][j=c"+ prev_jIndex +"]").addClass("tailTip");
 		$("#area > div[i=r"+ prevHeadRow +"][j=c"+ prevHeadColumn +"]").addClass("tail").attr("prev", parseInt($("#area > div.head").attr("i").split("r")[1]) + "," + parseInt($("#area > div.head").attr("j").split("c")[1]));
 	}
-	
+
 	function feedSnake()
 	{
 		var availArea = $("#area > div:not(.head):not(.tail)");
 		var index = Math.floor(Math.random() * availArea.length + 1);
 		$(availArea[index]).addClass("food");
 	}
-	
+
 	function growSnake(prevHeadRow, prevHeadColumn)
 	{
 		$("#area > div[i=r"+ prevHeadRow +"][j=c"+ prevHeadColumn +"]").addClass("tail").attr("prev", parseInt($("#area > div.head").attr("i").split("r")[1]) + "," + parseInt($("#area > div.head").attr("j").split("c")[1]));
 		feedSnake();
 	}
-	
+
 	function gameOver()
 	{
 		clearInterval(isStartedMoving);
@@ -295,7 +307,7 @@ var snake = (function()
 		$("#area > div.tail").addClass("gameOverTail");
 		$(document).unbind("keyup");
 	}
-	
+
 	function init()
 	{
 		drawGameArea();
@@ -303,12 +315,12 @@ var snake = (function()
 		assignLocomotion();
 		feedSnake();
 	}
-	
-	var scope = 
+
+	var scope =
 	{
 		init : init
 	}
-	
+
 	return scope;
 })();
 
