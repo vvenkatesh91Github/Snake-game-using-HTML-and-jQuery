@@ -45,3 +45,27 @@
     0%{background: gray;}
     50%{background: transparent;}
 }
+
+#controls > div#up, #controls > div#down
+{
+	width : 100%;
+	height : 75px;
+	float : left;
+}
+
+#controls > div#left, #controls > div#right
+{
+	width : 50%;
+	height : 75px;
+	display : inline-block;
+	float : left;
+}
+
+#controls > div > div
+{
+	width : 75px;
+	height : 75px;
+	font-weight : bold;
+	border : 1px solid;
+	margin : auto;
+}
