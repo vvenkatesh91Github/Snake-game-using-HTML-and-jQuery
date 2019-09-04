@@ -35,6 +35,12 @@
     50%{background: transparent;}
 }
 
+@keyframes blinkingHead
+{
+    0%{background: red;}
+    50%{background: transparent;}
+}
+
 .gameOverTail
 {
     animation: blinkingTail 1s infinite;
